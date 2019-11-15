@@ -28,6 +28,10 @@ guide_y = switch_width/2 - switch_operating_height - -switch_hole_offset - probe
 
 dovetail_width = switch_width/2;
 
+guide_thickness = base_thickness + switch_thickness;
+
+guide_roundness = 5;
+
 module armature(collar_d, collar_h, shoulder_d, shoulder_h, l) {
     union() {
         hull() {
@@ -64,7 +68,7 @@ module probe_guide() {
 module plate(w,h) {
     hull() {
         cube([w, 2*w+guide_padding, h]);
-            cube([w/4, w+guide_padding, h]);
+        cube([w/4, w+guide_padding, h]);
 
     }
 }
@@ -76,10 +80,6 @@ module full_plate(w,h) {
             rotate([0,0,180])
                 scale(v=1.1)
                     armature(6,6,6,4,12);
-        /*translate([w/2,(switch_height + w)/2+guide_padding, h-switch_hole_depth])
-            screwtaps(switch_hole_diameter/2, switch_hole_depth,
-                switch_hole_spacing);
- */
     }
 }
 
@@ -91,6 +91,21 @@ module dovetail(w,h,l) {
     }
 }
 module switch_captor(w,h) {
+    intersection(){
+    hull() {
+        translate([guide_roundness, guide_roundness, h])
+            rotate([180,0,0])
+                cylinder(r=guide_roundness, h=2.75*h);
+        translate([switch_width - guide_roundness,       guide_roundness, h])
+            rotate([180,0,0])
+                cylinder(r=guide_roundness, h=2.75*h);
+        translate([guide_roundness, w+2+guide_padding-guide_roundness, h])
+            rotate([180,0,0])
+                cylinder(r=guide_roundness, h=2.75*h);
+        translate([switch_width-guide_roundness, w+2+ guide_padding-guide_roundness, h])
+            rotate([180,0,0])
+                cylinder(r=guide_roundness, h=2.75*h);
+    }
     union() {
         cube([w, w+2+guide_padding, h]);
         translate([w-dovetail_width, guide_padding/4-.5, 0])
@@ -101,8 +116,20 @@ module switch_captor(w,h) {
             screwtaps(switch_hole_diameter/3, 2*switch_hole_depth/3,
                 switch_hole_spacing);
     }
+    }
 }
 module assembled_guide() {
+    intersection() {
+    hull() {
+        translate([guide_roundness, guide_roundness])
+            cylinder(r=guide_roundness, h=guide_thickness);
+        translate([switch_width - guide_roundness,       guide_roundness])
+            cylinder(r=guide_roundness, h=guide_thickness);
+        translate([guide_roundness, 12+switch_width+guide_padding-guide_roundness])
+            cylinder(r=guide_roundness, h=guide_thickness);
+        translate([switch_width-guide_roundness, 12+switch_width+guide_padding-guide_roundness])
+            cylinder(r=guide_roundness, h=guide_thickness);
+    }
     difference() {
         union() {
             full_plate(switch_width,base_thickness);
@@ -116,6 +143,7 @@ module assembled_guide() {
                     switch_captor(switch_width,base_thickness);
             }
         }
+    }
     }
 }
 
