@@ -10,6 +10,6 @@ jobs:
     steps:
     - uses: actions/checkout@v1
     - name: Install openscad
-      run: apt install openscad
+      run: sudo apt install openscad
     - name: Export stl with openscad
       run: openscad --info -o compact-z-probe.stl compact-z-probe.stl
