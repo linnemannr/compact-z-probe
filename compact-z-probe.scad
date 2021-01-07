@@ -1,6 +1,7 @@
 // Compact Z-Probe
 // Author: Reid Linnemann <linnemannr@gmail.com>
 
+$fn = 100;
 //units are mm
 switch_width = 12.8;
 switch_height = 5;
@@ -35,19 +36,19 @@ guide_roundness = 5;
 module armature(collar_d, collar_h, shoulder_d, shoulder_h, l) {
     union() {
         hull() {
-            cylinder(h=10, shoulder_h, r=shoulder_d/2, $fn=100);
+            cylinder(h=10, shoulder_h, r=shoulder_d/2);
             translate([0, -l, 0])
-              cylinder(h=shoulder_h, r=2.25, $fn=100);
+              cylinder(h=shoulder_h, r=2.25);
         };
         translate([0,0,1])
           rotate([180,0,0])
-          cylinder(h=collar_h+1, r=collar_d/2, $fn=100);
+          cylinder(h=collar_h+1, r=collar_d/2);
     }
 }
 
 module screwtap(r,d) {
     translate([0,0,0.1])
-      cylinder(r=r, h=d+0.1, $fn=100);
+      cylinder(r=r, h=d+0.1);
 }
 
 module screwtaps(r,d,w) {
@@ -62,7 +63,7 @@ module probe_guide() {
         cube([switch_width, guide_y, switch_thickness+base_thickness]);
         translate([4, switch_width/2+guide_padding, switch_thickness/2+base_thickness])
           rotate([90,0,0])
-          cylinder(r=probe_diameter/2, h=switch_width+guide_padding, $fn=100);
+          cylinder(r=probe_diameter/2, h=switch_width+guide_padding);
     }
 }
 module plate(w,h) {
